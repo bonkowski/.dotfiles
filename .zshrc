@@ -103,3 +103,4 @@ source $ZSH/oh-my-zsh.sh
 export PATH="$HOME/bin:$PATH"
 
 eval "$(zoxide init --cmd cd zsh)"
+eval $(thefuck --alias)
