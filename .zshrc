@@ -100,7 +100,12 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+alias ll="eza -l --icons"
+alias ls="eza"
+alias top="ytop"
+
 export PATH="$HOME/bin:$PATH"
 
 eval "$(zoxide init --cmd cd zsh)"
-eval $(thefuck --alias)
+eval "$(thefuck --alias)"
+eval "$(starship init zsh)"
