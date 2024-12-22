@@ -1,0 +1,55 @@
+[user]
+	name = André Bonkowski
+	email = andre@kodemaker.no
+
+[core]
+	editor = vim
+	autocrlf = input
+	excludesfile = /Users/andre/.gitignore
+	pager = delta
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	co = checkout
+	st = status
+	down = pull --rebase
+	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d
+	prune-branches-forced = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
+
+[rebase]
+    autoStash = true
+[diff "sopsdiffer"]
+	textconv = sops -d
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    features = decorations
+		navigate = true    # use n and N to move between diff sections
+    light = false      # set to true if you're in a terminal w/ a light background color (e.g.
+
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+
+
+[init]
+	defaultBranch = main
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default
