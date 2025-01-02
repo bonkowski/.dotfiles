@@ -113,6 +113,7 @@ alias ll="eza -l --icons"
 alias ls="eza"
 alias top="ytop"
 alias vim="nvim"
+alias lg="lazygit"
 
 export PATH="$HOME/bin:$PATH"
 
