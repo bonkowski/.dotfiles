@@ -26,6 +26,7 @@ brew "delta"
 brew "lazygit"
 brew "stow"
 brew "neovim"
+brew "tmux"
 
 # Optional deps for yazi. Might be useful by them selves
 brew "ffmpeg"
