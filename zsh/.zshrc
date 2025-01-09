@@ -114,6 +114,7 @@ alias ls="eza"
 alias top="ytop"
 alias vim="nvim"
 alias lg="lazygit"
+alias cat="bat --paging=never"
 
 export PATH="$HOME/bin:$PATH"
 
