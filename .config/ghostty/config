@@ -1,5 +1,10 @@
 font-size = 16
-theme = dark:catppuccin-mocha,light:catppuccin-latte
+theme = catppuccin-macchiato
+                
+
+# Fungerer ikke så bra sammen med tmux konfigurasjonen, siden tmux ikke ikke fanger opp endringene.
+#theme = dark:catppuccin-mocha,light:catppuccin-latte
+
 window-save-state = always
 
 
