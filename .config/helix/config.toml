@@ -1,0 +1,12 @@
+theme = "catppuccin_macchiato"
+
+[editor]
+line-number = "relative"
+color-modes = true
+cursorline = true
+bufferline = "multiple"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
