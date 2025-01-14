@@ -115,7 +115,7 @@ alias top="ytop"
 alias vim="nvim"
 alias lg="lazygit"
 alias cat="bat --paging=never"
-
+alias top="btm"
 export PATH="$HOME/bin:$PATH"
 
 eval "$(zoxide init --cmd cd zsh)"
