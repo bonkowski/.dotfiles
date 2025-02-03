@@ -42,6 +42,12 @@ brew "imagemagick"
 brew "yazi"
 brew "leiningen"
 
+
+#Kunde
+cask "macfuse"
+cask "mattermost"
+# Har også installer sshfs manuelt siden det ikke finnes en ARM versjon i brew 
+
 cask "arc"
 cask "jetbrains-toolbox"
 cask "sublime-text"
