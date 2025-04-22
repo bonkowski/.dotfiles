@@ -44,7 +44,6 @@ brew "leiningen"
 
 
 #Kunde
-cask "macfuse"
 cask "mattermost"
 # Har også installer sshfs manuelt siden det ikke finnes en ARM versjon i brew 
 
