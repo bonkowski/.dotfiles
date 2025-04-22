@@ -30,6 +30,7 @@ brew "bat"
 brew "bottom"
 brew "helix"
 brew "lazydocker"
+brew "wget"
 
 # Optional deps for yazi. Might be useful by them selves
 brew "ffmpeg"
