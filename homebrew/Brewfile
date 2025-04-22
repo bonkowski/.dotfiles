@@ -45,6 +45,7 @@ brew "leiningen"
 
 #Kunde
 cask "mattermost"
+brew "ktlint"
 # Har også installer sshfs manuelt siden det ikke finnes en ARM versjon i brew 
 
 cask "arc"
