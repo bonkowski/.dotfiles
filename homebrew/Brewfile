@@ -32,14 +32,15 @@ brew "helix"
 brew "lazydocker"
 brew "wget"
 brew "adr-tools"
+brew "webp"
 
 # Optional deps for yazi. Might be useful by them selves
 brew "ffmpeg"
-brew "sevenzip" 
+brew "sevenzip"
 brew "jq"
-brew "poppler" 
-brew "ripgrep"  
-brew "imagemagick" 
+brew "poppler"
+brew "ripgrep"
+brew "imagemagick"
 brew "yazi"
 brew "leiningen"
 
@@ -47,7 +48,7 @@ brew "leiningen"
 #Kunde
 cask "mattermost"
 brew "ktlint"
-# Har også installer sshfs manuelt siden det ikke finnes en ARM versjon i brew 
+# Har også installer sshfs manuelt siden det ikke finnes en ARM versjon i brew
 
 cask "arc"
 cask "jetbrains-toolbox"
