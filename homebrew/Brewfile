@@ -34,6 +34,7 @@ brew "wget"
 brew "adr-tools"
 brew "webp"
 
+brew "unisonlang"
 # Optional deps for yazi. Might be useful by them selves
 brew "ffmpeg"
 brew "sevenzip"
