@@ -35,6 +35,7 @@ brew "adr-tools"
 brew "webp"
 
 brew "unisonlang"
+brew "gleam"
 # Optional deps for yazi. Might be useful by them selves
 brew "ffmpeg"
 brew "sevenzip"
@@ -65,4 +66,3 @@ cask "ghostty"
 
 mas "com.agilebits.onepassword-osx", id: 443987910
 mas "marked-2-markdown-preview", id: 890031187
-
