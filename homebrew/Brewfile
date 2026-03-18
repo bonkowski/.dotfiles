@@ -36,6 +36,7 @@ brew "webp"
 
 brew "unisonlang"
 brew "gleam"
+brew "rebar3"
 # Optional deps for yazi. Might be useful by them selves
 brew "ffmpeg"
 brew "sevenzip"
@@ -45,12 +46,14 @@ brew "ripgrep"
 brew "imagemagick"
 brew "yazi"
 brew "leiningen"
-
+brew "mole"
 
 #Kunde
 cask "mattermost"
 brew "ktlint"
 # Har også installer sshfs manuelt siden det ikke finnes en ARM versjon i brew
+
+brew "mise"
 
 cask "arc"
 cask "jetbrains-toolbox"
@@ -63,6 +66,7 @@ cask "typora"
 cask "marta"
 cask "font-symbols-only-nerd-font"
 cask "ghostty"
+cask "1password"
+cask "sublime-text"
 
-mas "com.agilebits.onepassword-osx", id: 443987910
 mas "marked-2-markdown-preview", id: 890031187
