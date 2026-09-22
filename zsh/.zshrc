@@ -116,9 +116,14 @@ alias vim="nvim"
 alias lg="lazygit"
 alias cat="bat --paging=never"
 alias top="btm"
-export PATH="$HOME/bin:$PATH"
+alias format="mise format"
+alias review="mise x -- elm-review --fix"
 
-eval "$(zoxide init --cmd cd zsh)"
 eval "$(thefuck --alias)"
 eval "$(starship init zsh)"
+eval "$(direnv hook zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
+# zoxide's init is already last, so its "possible configuration issue" notice is spurious here — it
+# fires in the non-interactive shells Claude Code runs, where the init never completes. Silence it.
+export _ZO_DOCTOR=0
