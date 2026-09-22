@@ -1,5 +1,5 @@
 font-size = 16
-theme = catppuccin-macchiato
+theme = catppuccin-frappe.conf
                 
 
 # Fungerer ikke så bra sammen med tmux konfigurasjonen, siden tmux ikke ikke fanger opp endringene.
