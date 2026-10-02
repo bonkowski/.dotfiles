@@ -1,72 +1,126 @@
 tap "clojure/tools"
-tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/services"
-tap "jesseduffield/lazygit"
+tap "clevercloud/tap"
+tap "juxt/allium"
+tap "stripe/stripe-cli"
 
+# Shell / CLI
+# Intrum
+brew "powershell"
 brew "coreutils"
-brew "libssh2"
+brew "git"
+brew "grep"
+brew "gzip"
+brew "wget"
+brew "tree"
 brew "eza"
 brew "fd"
 brew "fzf"
 brew "zoxide"
-brew "pcre2"
-brew "git"
-brew "grep"
-brew "gzip"
-brew "hugo"
-brew "starship"
-brew "tree"
-brew "cjbassi/ytop/ytop"
-brew "clojure/tools/clojure"
-brew "thefuck"
-brew "elm"
-brew "delta"
-brew "lazygit"
-brew "stow"
-brew "neovim"
-brew "tmux"
+brew "ripgrep"
 brew "bat"
+brew "git-delta"
+brew "starship"
+brew "thefuck"
 brew "bottom"
-brew "helix"
-brew "lazydocker"
-brew "wget"
-brew "adr-tools"
-brew "webp"
+brew "stow"
+brew "direnv"
+brew "gh"
+brew "jq"
+brew "dict"
+brew "telnet"
+brew "watchexec"
+brew "mas"
 
-brew "unisonlang"
-brew "gleam"
-brew "rebar3"
-# Optional deps for yazi. Might be useful by them selves
+# Editors / TUI
+brew "neovim"
+brew "helix"
+brew "tmux"
+brew "lazygit"
+brew "lazydocker"
+brew "yazi"
+# Optional deps for yazi
 brew "ffmpeg"
 brew "sevenzip"
-brew "jq"
 brew "poppler"
-brew "ripgrep"
 brew "imagemagick"
-brew "yazi"
+
+# Languages / runtimes
+# Intrum
+brew "dotnet"
+brew "clojure/tools/clojure", trusted: true
 brew "leiningen"
+brew "elm"
+brew "elm-format"
+brew "unisonlang"
+brew "gleam"
+brew "kotlin"
+brew "ktlint"
+brew "gradle"
+brew "node"
+brew "pnpm"
+brew "yarn"
+brew "poetry"
+brew "rustup"
+brew "mise"
+brew "hugo"
+brew "adr-tools"
 brew "mole"
 
-#Kunde
-cask "mattermost"
-brew "ktlint"
-# Har også installer sshfs manuelt siden det ikke finnes en ARM versjon i brew
+# Build / dev tooling
+brew "cmake"
+brew "pkgconf"
+brew "xcodegen"
+brew "sqlc"
+brew "libpq"
+brew "flyctl"
 
-brew "mise"
+# Third-party taps
+brew "clevercloud/tap/clever-tools", trusted: true
+brew "juxt/allium/allium", trusted: true
+brew "stripe/stripe-cli/stripe", trusted: true
 
-cask "arc"
-cask "jetbrains-toolbox"
-cask "sublime-text"
-cask "raycast"
-cask "warp"
-cask "zed"
-cask "slack"
-cask "typora"
-cask "marta"
-cask "font-symbols-only-nerd-font"
-cask "ghostty"
+# SM
+brew "container-compose"
+brew "socktainer"
+brew "colima"
+brew "lima-additional-guestagents"
+
+# Only needed for the file-upload test loop (§6)
+cask "ngrok"
+
+# Apps
 cask "1password"
+cask "raycast"
+cask "ghostty"
+cask "zed"
 cask "sublime-text"
+cask "jetbrains-toolbox"
+cask "gitbutler"
+cask "slack"
+cask "marta"
+cask "supacode"
+cask "typora"
+cask "google-chrome"
+cask "keycastr"
+cask "font-symbols-only-nerd-font"
 
-mas "marked-2-markdown-preview", id: 890031187
+# Mac App Store
+mas "1Password for Safari", id: 1569813296
+mas "Consent-O-Matic", id: 1606897889
+mas "Developer", id: 640199958
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
+mas "Marked 2", id: 890031187
+mas "MindNode Classic", id: 1289197285
+mas "NordVPN", id: 905953485
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Trello", id: 1278508951
+mas "Xcode", id: 497799835
+
+# iPhone/iPad-apper – lar seg kun installere på Apple Silicon
+mas "Numbers (iOS)", id: 361304891
+mas "Pages (iOS)", id: 361309726
+mas "WhatsApp (iOS)", id: 310633997
+
+# sshfs er installert manuelt – finnes ikke ARM-versjon i brew
