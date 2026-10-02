@@ -104,23 +104,25 @@ cask "google-chrome"
 cask "keycastr"
 cask "font-symbols-only-nerd-font"
 
-# Mac App Store
-mas "1Password for Safari", id: 1569813296
-mas "Consent-O-Matic", id: 1606897889
-mas "Developer", id: 640199958
-mas "iMovie", id: 408981434
-mas "Keynote", id: 409183694
-mas "Marked 2", id: 890031187
-mas "MindNode Classic", id: 1289197285
-mas "NordVPN", id: 905953485
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "Trello", id: 1278508951
-mas "Xcode", id: 497799835
+# Mac App Store – hoppes over med HOMEBREW_SKIP_MAS=1 (f.eks. jobbmaskin uten App Store-konto)
+unless ENV["HOMEBREW_SKIP_MAS"]
+  mas "1Password for Safari", id: 1569813296
+  mas "Consent-O-Matic", id: 1606897889
+  mas "Developer", id: 640199958
+  mas "iMovie", id: 408981434
+  mas "Keynote", id: 409183694
+  mas "Marked 2", id: 890031187
+  mas "MindNode Classic", id: 1289197285
+  mas "NordVPN", id: 905953485
+  mas "Numbers", id: 409203825
+  mas "Pages", id: 409201541
+  mas "Trello", id: 1278508951
+  mas "Xcode", id: 497799835
 
-# iPhone/iPad-apper – lar seg kun installere på Apple Silicon
-mas "Numbers (iOS)", id: 361304891
-mas "Pages (iOS)", id: 361309726
-mas "WhatsApp (iOS)", id: 310633997
+  # iPhone/iPad-apper – lar seg kun installere på Apple Silicon
+  mas "Numbers (iOS)", id: 361304891
+  mas "Pages (iOS)", id: 361309726
+  mas "WhatsApp (iOS)", id: 310633997
+end
 
 # sshfs er installert manuelt – finnes ikke ARM-versjon i brew

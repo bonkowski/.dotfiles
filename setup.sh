@@ -2,6 +2,9 @@
 # Setter opp en ny maskin. Kjør med:
 #   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
 #
+# Uten App Store-konto (f.eks. jobbmaskin):
+#   SKIP_MAS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
+#
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
@@ -49,7 +52,15 @@ stow_all() {
 }
 
 install_brew_bundle() {
-  brew bundle --file "$DOTFILE_DIR/homebrew/Brewfile"
+  # Homebrew sender bare videre miljøvariabler med HOMEBREW_-prefiks til Brewfile
+  if [ -n "${SKIP_MAS:-}" ]; then
+    export HOMEBREW_SKIP_MAS=1
+  fi
+
+  # Ikke avbryt hvis enkeltpakker feiler, f.eks. apper som IT allerede har installert
+  if ! brew bundle --file "$DOTFILE_DIR/homebrew/Brewfile"; then
+    echo "ADVARSEL: Noen pakker i Brewfile feilet. Se over feilene, og kjør 'brew bundle --file ~/Brewfile' på nytt ved behov."
+  fi
 }
 
 install_oh_my_zsh() {
