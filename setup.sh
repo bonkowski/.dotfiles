@@ -1,6 +1,6 @@
 #!/bin/bash
 # Setter opp en ny maskin. Kjør med:
-#   curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh | bash
+#   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
 #
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
@@ -13,7 +13,7 @@ REPO_SSH="git@github.com:bonkowski/.dotfiles.git"
 install_homebrew() {
   if ! command -v brew &>/dev/null; then
     echo "Homebrew ikke funnet. Installerer Homebrew..."
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
   # brew er ikke i PATH rett etter en ny installasjon
