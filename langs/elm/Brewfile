@@ -1,0 +1,2 @@
+brew "elm"
+brew "elm-format"

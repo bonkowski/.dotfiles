@@ -1,0 +1,3 @@
+# Intrum
+brew "dotnet"
+brew "powershell"

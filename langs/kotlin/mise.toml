@@ -1,0 +1,5 @@
+[tools]
+java = "temurin-21"
+kotlin = "latest"
+ktlint = "latest"
+gradle = "latest"

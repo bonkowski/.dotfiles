@@ -7,6 +7,9 @@
 # Uten App Store-konto på Mac (f.eks. jobbmaskin):
 #   SKIP_MAS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
 #
+# Språk (se langs/) velges i en meny, eller på forhånd uten spørsmål:
+#   LANGS="dotnet python" /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
+#
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
@@ -15,6 +18,7 @@ DOTFILE_DIR="$HOME/.dotfiles"
 REPO_HTTPS="https://github.com/bonkowski/.dotfiles.git"
 REPO_SSH="git@github.com:bonkowski/.dotfiles.git"
 OS="$(uname -s)"
+LANGS_FILE="$HOME/.config/dotfiles/langs"
 
 APT_PACKAGES=(
   # Grunnpakker
@@ -67,6 +71,59 @@ clone_dotfiles_repo() {
   fi
 }
 
+choose_langs() {
+  local available=() lang answer
+  for dir in "$DOTFILE_DIR"/langs/*/; do
+    available+=("$(basename "$dir")")
+  done
+
+  local current=""
+  if [ -f "$LANGS_FILE" ]; then
+    current="$(tr '\n' ' ' <"$LANGS_FILE")"
+  fi
+
+  if [ -n "${LANGS:-}" ]; then
+    answer="$LANGS"
+  elif { : </dev/tty; } 2>/dev/null; then
+    echo
+    echo "Hvilke språk vil du installere?"
+    printf '  %s\n' "${available[@]}"
+    echo "Skriv navnene adskilt med mellomrom, 'alle' for alle, eller tomt for ingen."
+    if [ -n "$current" ]; then
+      echo "Trykk Enter for å beholde nåværende valg: $current"
+    fi
+    read -r -p "> " answer </dev/tty
+    answer="${answer:-$current}"
+  else
+    answer="$current"
+  fi
+
+  if [ "$answer" = alle ]; then
+    answer="${available[*]}"
+  fi
+
+  mkdir -p "$(dirname "$LANGS_FILE")"
+  : >"$LANGS_FILE"
+  for lang in $(echo "$answer" | tr ' ,' '\n\n'); do
+    if [ -d "$DOTFILE_DIR/langs/$lang" ]; then
+      echo "$lang" >>"$LANGS_FILE"
+    else
+      echo "ADVARSEL: Ukjent språk '$lang', hopper over."
+    fi
+  done
+  echo "Valgte språk: $(tr '\n' ' ' <"$LANGS_FILE")"
+}
+
+link_lang_mise_configs() {
+  local conf_dir="$HOME/.config/mise/conf.d" lang
+
+  # Fjerner lenker til språk som ikke lenger er valgt
+  find "$conf_dir" -maxdepth 1 -type l -name 'lang-*.toml' -delete
+  while read -r lang; do
+    ln -s "$DOTFILE_DIR/langs/$lang/mise.toml" "$conf_dir/lang-$lang.toml"
+  done <"$LANGS_FILE"
+}
+
 stow_all() {
   local packages=(git tmux zsh)
 
@@ -105,7 +162,9 @@ install_mise_tools() {
   export PATH="$HOME/.local/bin:$PATH"
 
   echo "Installerer verktøy med mise (kan ta en stund)..."
-  mise trust "$HOME/.config/mise/conf.d/linux.toml"
+  for config in "$HOME"/.config/mise/conf.d/*.toml; do
+    mise trust "$config"
+  done
   # Ikke avbryt hvis enkeltverktøy feiler, f.eks. pga. GitHub sin rate limit
   if ! (builtin cd "$HOME" && mise install); then
     echo "ADVARSEL: Noen verktøy feilet. Kjør 'mise install' på nytt senere, gjerne med GITHUB_TOKEN satt."
@@ -146,11 +205,13 @@ main() {
   esac
 
   clone_dotfiles_repo
+  choose_langs
   stow_all
 
   if [ "$OS" = Darwin ]; then
     install_brew_bundle
   else
+    link_lang_mise_configs
     install_mise_tools
     set_default_shell
   fi

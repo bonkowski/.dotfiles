@@ -1,11 +1,8 @@
-tap "clojure/tools"
 tap "clevercloud/tap"
 tap "juxt/allium"
 tap "stripe/stripe-cli"
 
 # Shell / CLI
-# Intrum
-brew "powershell"
 brew "coreutils"
 brew "git"
 brew "grep"
@@ -44,23 +41,10 @@ brew "sevenzip"
 brew "poppler"
 brew "imagemagick"
 
-# Languages / runtimes
-# Intrum
-brew "dotnet"
-brew "clojure/tools/clojure", trusted: true
-brew "leiningen"
-brew "elm"
-brew "elm-format"
-brew "unisonlang"
-brew "gleam"
-brew "kotlin"
-brew "ktlint"
-brew "gradle"
+# Languages / runtimes – språkene velges i setup.sh, se langs/ og slutten av fila
 brew "node"
 brew "pnpm"
 brew "yarn"
-brew "poetry"
-brew "rustup"
 brew "mise"
 brew "hugo"
 brew "adr-tools"
@@ -126,3 +110,12 @@ unless ENV["HOMEBREW_SKIP_MAS"]
 end
 
 # sshfs er installert manuelt – finnes ikke ARM-versjon i brew
+
+# Språk valgt i setup.sh (lagret i ~/.config/dotfiles/langs, ett per linje)
+langs_file = File.expand_path("~/.config/dotfiles/langs")
+if File.exist?(langs_file)
+  File.readlines(langs_file, chomp: true).reject(&:empty?).each do |lang|
+    lang_brewfile = File.expand_path("~/.dotfiles/langs/#{lang}/Brewfile")
+    instance_eval(File.read(lang_brewfile), lang_brewfile) if File.exist?(lang_brewfile)
+  end
+end

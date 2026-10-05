@@ -1,0 +1,3 @@
+tap "clojure/tools"
+brew "clojure/tools/clojure", trusted: true
+brew "leiningen"

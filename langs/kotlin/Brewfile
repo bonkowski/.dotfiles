@@ -1,0 +1,3 @@
+brew "kotlin"
+brew "ktlint"
+brew "gradle"
