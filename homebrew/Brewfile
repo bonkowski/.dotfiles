@@ -63,11 +63,7 @@ brew "clevercloud/tap/clever-tools", trusted: true
 brew "juxt/allium/allium", trusted: true
 brew "stripe/stripe-cli/stripe", trusted: true
 
-# SM
-brew "container-compose"
-brew "socktainer"
-brew "colima"
-brew "lima-additional-guestagents"
+# Docker (colima) og Apple container velges i setup.sh, se langs/
 
 # Only needed for the file-upload test loop (§6)
 cask "ngrok"

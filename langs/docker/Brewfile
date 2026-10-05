@@ -1,0 +1,6 @@
+# Colima kjører Docker i en lett VM – gratis alternativ til Docker Desktop
+brew "colima"
+brew "lima-additional-guestagents"
+brew "docker"
+brew "docker-compose"
+brew "docker-buildx"

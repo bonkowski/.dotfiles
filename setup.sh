@@ -7,8 +7,9 @@
 # Uten App Store-konto på Mac (f.eks. jobbmaskin):
 #   SKIP_MAS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
 #
-# Språk (se langs/) velges i en meny der forrige valg er forhåndsvalgt, eller uten spørsmål:
-#   LANGS="dotnet python" /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
+# Språk og verktøy som Docker (se langs/) velges i en meny der forrige valg er forhåndsvalgt,
+# eller uten spørsmål:
+#   LANGS="dotnet python docker" /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
 #
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
@@ -19,6 +20,7 @@ REPO_HTTPS="https://github.com/bonkowski/.dotfiles.git"
 REPO_SSH="git@github.com:bonkowski/.dotfiles.git"
 OS="$(uname -s)"
 LANGS_FILE="$HOME/.config/dotfiles/langs"
+PREVIOUS_LANGS=""
 
 APT_PACKAGES=(
   # Grunnpakker
@@ -73,7 +75,13 @@ clone_dotfiles_repo() {
 
 choose_langs() {
   local available=() selected=() i n answer
+  # Bare grupper som har noe å installere på dette OS-et (f.eks. er apple-container bare for Mac)
   for dir in "$DOTFILE_DIR"/langs/*/; do
+    if [ "$OS" = Darwin ]; then
+      [ -f "$dir/Brewfile" ] || continue
+    else
+      [ -f "$dir/mise.toml" ] || [ -f "$dir/apt" ] || continue
+    fi
     available+=("$(basename "$dir")")
   done
 
@@ -103,7 +111,7 @@ choose_langs() {
   if [ -z "${LANGS:-}" ] && { : </dev/tty; } 2>/dev/null; then
     while true; do
       echo
-      echo "Velg språk. Skriv nummer for å slå av/på (flere med mellomrom), 'a' for alle, 'i' for ingen."
+      echo "Velg språk og verktøy. Skriv nummer for å slå av/på (flere med mellomrom), 'a' for alle, 'i' for ingen."
       echo "Trykk Enter når du er ferdig."
       for i in "${!available[@]}"; do
         if [ "${selected[i]}" = 1 ]; then
@@ -132,13 +140,79 @@ choose_langs() {
   fi
 
   mkdir -p "$(dirname "$LANGS_FILE")"
+  if [ -f "$LANGS_FILE" ]; then
+    PREVIOUS_LANGS="$(cat "$LANGS_FILE")"
+  fi
   : >"$LANGS_FILE"
   for i in "${!available[@]}"; do
     if [ "${selected[i]}" = 1 ]; then
       echo "${available[i]}" >>"$LANGS_FILE"
     fi
   done
-  echo "Valgte språk: $(tr '\n' ' ' <"$LANGS_FILE")"
+  echo "Valgt: $(tr '\n' ' ' <"$LANGS_FILE")"
+}
+
+# Pakker en gruppe installerer: brew-navn på Mac, "mise:<verktøy>" og "apt:<pakke>" på Linux
+lang_packages() {
+  local dir="$DOTFILE_DIR/langs/$1"
+  if [ "$OS" = Darwin ]; then
+    if [ -f "$dir/Brewfile" ]; then
+      sed -nE 's/^brew "([^"]+)".*/\1/p' "$dir/Brewfile"
+    fi
+  else
+    if [ -f "$dir/mise.toml" ]; then
+      sed -nE 's/^"?([^"= ]+)"? *=.*/mise:\1/p' "$dir/mise.toml"
+    fi
+    if [ -f "$dir/apt" ]; then
+      grep -vE '^\s*(#|$)' "$dir/apt" | sed 's/^/apt:/'
+    fi
+  fi
+}
+
+remove_deselected_langs() {
+  local lang removed=() packages=() keep package answer
+
+  for lang in $PREVIOUS_LANGS; do
+    if ! grep -qx "$lang" "$LANGS_FILE"; then
+      removed+=("$lang")
+    fi
+  done
+  if [ ${#removed[@]} -eq 0 ]; then
+    return
+  fi
+
+  # Pakker som fortsatt brukes av et valgt språk (f.eks. java for både clojure og kotlin) beholdes
+  keep="$(while read -r lang; do lang_packages "$lang"; done <"$LANGS_FILE")"
+  for lang in "${removed[@]}"; do
+    for package in $(lang_packages "$lang"); do
+      if ! echo "$keep" | grep -qx "$package"; then
+        packages+=("$package")
+      fi
+    done
+  done
+
+  echo
+  echo "Fjernet fra valget: $(printf '%s ' "${removed[@]}")"
+  if [ ${#packages[@]} -eq 0 ]; then
+    return
+  fi
+  echo "Dette kan avinstalleres: $(printf '%s ' "${packages[@]}")"
+  if [ -n "${LANGS:-}" ] || ! { : </dev/tty; } 2>/dev/null; then
+    echo "Avinstallerer ikke uten bekreftelse. Kjør scriptet interaktivt for å avinstallere."
+    return
+  fi
+  read -r -p "Avinstallere? [J/n] " answer </dev/tty
+  case "$answer" in
+    [nN]*) return ;;
+  esac
+
+  for package in "${packages[@]}"; do
+    case "$package" in
+      apt:*) sudo apt-get remove -y "${package#apt:}" ;;
+      mise:*) mise prune --yes "${package#mise:}" ;;
+      *) brew uninstall "$package" ;;
+    esac || echo "ADVARSEL: Klarte ikke å avinstallere $package."
+  done
 }
 
 link_lang_mise_configs() {
@@ -147,7 +221,37 @@ link_lang_mise_configs() {
   # Fjerner lenker til språk som ikke lenger er valgt
   find "$conf_dir" -maxdepth 1 -type l -name 'lang-*.toml' -delete
   while read -r lang; do
-    ln -s "$DOTFILE_DIR/langs/$lang/mise.toml" "$conf_dir/lang-$lang.toml"
+    if [ -f "$DOTFILE_DIR/langs/$lang/mise.toml" ]; then
+      ln -s "$DOTFILE_DIR/langs/$lang/mise.toml" "$conf_dir/lang-$lang.toml"
+    fi
+  done <"$LANGS_FILE"
+}
+
+install_lang_apt_packages() {
+  local lang packages=()
+  while read -r lang; do
+    if [ -f "$DOTFILE_DIR/langs/$lang/apt" ]; then
+      packages+=($(grep -vE '^\s*(#|$)' "$DOTFILE_DIR/langs/$lang/apt"))
+    fi
+  done <"$LANGS_FILE"
+
+  if [ ${#packages[@]} -gt 0 ]; then
+    echo "Installerer apt-pakker for valgte språk og verktøy..."
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${packages[@]}"
+  fi
+}
+
+# Kjører langs/<gruppe>/post-install-mac.sh eller -linux.sh, f.eks. oppsett av Docker
+run_lang_post_install() {
+  local lang hook suffix=linux
+  if [ "$OS" = Darwin ]; then
+    suffix=mac
+  fi
+  while read -r lang; do
+    hook="$DOTFILE_DIR/langs/$lang/post-install-$suffix.sh"
+    if [ -f "$hook" ]; then
+      bash "$hook" || echo "ADVARSEL: $hook feilet."
+    fi
   done <"$LANGS_FILE"
 }
 
@@ -236,10 +340,15 @@ main() {
   stow_all
 
   if [ "$OS" = Darwin ]; then
+    remove_deselected_langs
     install_brew_bundle
+    run_lang_post_install
   else
     link_lang_mise_configs
+    install_lang_apt_packages
     install_mise_tools
+    remove_deselected_langs
+    run_lang_post_install
     set_default_shell
   fi
 

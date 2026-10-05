@@ -1,0 +1,5 @@
+# Apple container – krever macOS 26 og Apple Silicon
+brew "container"
+brew "container-compose"
+# Docker-kompatibelt API oppå Apple container
+brew "socktainer"
