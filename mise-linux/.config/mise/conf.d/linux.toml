@@ -1,0 +1,52 @@
+# Verktøy for Linux/WSL – tilsvarer Brewfile på Mac.
+# Grunnpakker og enkle CLI-verktøy (zsh, tmux, stow, git, jq, ripgrep, fzf, direnv osv.)
+# installeres med apt i setup.sh. Her ligger det apt mangler eller har for gamle versjoner av.
+[tools]
+# Shell / CLI
+"github:eza-community/eza" = "latest"
+fd = "latest"
+zoxide = "latest"
+bat = "latest"
+delta = "latest"
+starship = "latest"
+bottom = "latest"
+gh = "latest"
+watchexec = "latest"
+
+# Editors / TUI
+neovim = "latest"
+helix = "latest"
+lazygit = "latest"
+lazydocker = "latest"
+yazi = "latest"
+
+# Languages / runtimes
+java = "temurin-21"
+node = "lts"
+python = "latest"
+rust = "latest"
+dotnet = "latest"
+powershell = "latest"
+clojure = "latest"
+leiningen = "latest"
+elm = "latest"
+"npm:elm-format" = "latest"
+unison = "latest"
+gleam = "latest"
+kotlin = "latest"
+ktlint = "latest"
+gradle = "latest"
+pnpm = "latest"
+yarn = "latest"
+poetry = "latest"
+hugo = "latest"
+adr-tools = "latest"
+
+# Build / dev tooling
+sqlc = "latest"
+flyctl = "latest"
+
+# Third-party
+stripe = "latest"
+"npm:clever-tools" = "latest"
+"github:juxt/allium-tools" = "latest"

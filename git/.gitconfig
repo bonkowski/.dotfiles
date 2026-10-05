@@ -5,7 +5,7 @@
 [core]
 	editor = vim
 	autocrlf = input
-	excludesfile = /Users/andre/.gitignore
+	excludesfile = ~/.gitignore
 	pager = delta
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit

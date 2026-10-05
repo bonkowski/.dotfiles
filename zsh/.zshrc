@@ -119,7 +119,17 @@ alias top="btm"
 alias format="mise format"
 alias review="mise x -- elm-review --fix"
 
-eval "$(thefuck --alias)"
+# På Linux/WSL kommer verktøyene fra mise i stedet for Homebrew. hook-env legger dem
+# i PATH med en gang, ikke først ved neste prompt, så init-linjene under finner dem.
+if [[ "$OSTYPE" == linux* ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+  if command -v mise >/dev/null; then
+    eval "$(mise activate zsh)"
+    eval "$(mise hook-env -s zsh)"
+  fi
+fi
+
+command -v thefuck >/dev/null && eval "$(thefuck --alias)"
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 eval "$(zoxide init --cmd cd zsh)"
