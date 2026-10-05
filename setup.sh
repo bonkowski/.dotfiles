@@ -7,7 +7,7 @@
 # Uten App Store-konto på Mac (f.eks. jobbmaskin):
 #   SKIP_MAS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
 #
-# Språk (se langs/) velges i en meny, eller på forhånd uten spørsmål:
+# Språk (se langs/) velges i en meny der forrige valg er forhåndsvalgt, eller uten spørsmål:
 #   LANGS="dotnet python" /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/bonkowski/.dotfiles/main/setup.sh)"
 #
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
@@ -72,43 +72,70 @@ clone_dotfiles_repo() {
 }
 
 choose_langs() {
-  local available=() lang answer
+  local available=() selected=() i n answer
   for dir in "$DOTFILE_DIR"/langs/*/; do
     available+=("$(basename "$dir")")
   done
 
-  local current=""
-  if [ -f "$LANGS_FILE" ]; then
-    current="$(tr '\n' ' ' <"$LANGS_FILE")"
-  fi
-
+  # Forhåndsvalg: LANGS hvis satt, ellers det som ble valgt sist
+  local preset=""
   if [ -n "${LANGS:-}" ]; then
-    answer="$LANGS"
-  elif { : </dev/tty; } 2>/dev/null; then
-    echo
-    echo "Hvilke språk vil du installere?"
-    printf '  %s\n' "${available[@]}"
-    echo "Skriv navnene adskilt med mellomrom, 'alle' for alle, eller tomt for ingen."
-    if [ -n "$current" ]; then
-      echo "Trykk Enter for å beholde nåværende valg: $current"
-    fi
-    read -r -p "> " answer </dev/tty
-    answer="${answer:-$current}"
-  else
-    answer="$current"
+    preset="$(echo "$LANGS" | tr ' ,' '\n\n')"
+  elif [ -f "$LANGS_FILE" ]; then
+    preset="$(cat "$LANGS_FILE")"
   fi
+  if [ "$preset" = alle ]; then
+    preset="${available[*]}"
+  fi
+  for i in "${!available[@]}"; do
+    selected[i]=0
+    if echo "$preset" | grep -qx "${available[i]}"; then
+      selected[i]=1
+    fi
+  done
+  for n in $preset; do
+    if [ ! -d "$DOTFILE_DIR/langs/$n" ]; then
+      echo "ADVARSEL: Ukjent språk '$n', hopper over."
+    fi
+  done
 
-  if [ "$answer" = alle ]; then
-    answer="${available[*]}"
+  # Meny bare når LANGS ikke er satt og det finnes en terminal
+  if [ -z "${LANGS:-}" ] && { : </dev/tty; } 2>/dev/null; then
+    while true; do
+      echo
+      echo "Velg språk. Skriv nummer for å slå av/på (flere med mellomrom), 'a' for alle, 'i' for ingen."
+      echo "Trykk Enter når du er ferdig."
+      for i in "${!available[@]}"; do
+        if [ "${selected[i]}" = 1 ]; then
+          printf '  %d) [x] %s\n' $((i + 1)) "${available[i]}"
+        else
+          printf '  %d) [ ] %s\n' $((i + 1)) "${available[i]}"
+        fi
+      done
+      read -r -p "> " answer </dev/tty
+      if [ -z "$answer" ]; then
+        break
+      fi
+      for n in $(echo "$answer" | tr ' ,' '\n\n'); do
+        if [ "$n" = a ] || [ "$n" = i ]; then
+          for i in "${!available[@]}"; do
+            selected[i]=$([ "$n" = a ] && echo 1 || echo 0)
+          done
+        elif [[ "$n" =~ ^[0-9]+$ ]] && [ "$n" -ge 1 ] && [ "$n" -le "${#available[@]}" ]; then
+          i=$((n - 1))
+          selected[i]=$((1 - selected[i]))
+        else
+          echo "Ugyldig valg: $n"
+        fi
+      done
+    done
   fi
 
   mkdir -p "$(dirname "$LANGS_FILE")"
   : >"$LANGS_FILE"
-  for lang in $(echo "$answer" | tr ' ,' '\n\n'); do
-    if [ -d "$DOTFILE_DIR/langs/$lang" ]; then
-      echo "$lang" >>"$LANGS_FILE"
-    else
-      echo "ADVARSEL: Ukjent språk '$lang', hopper over."
+  for i in "${!available[@]}"; do
+    if [ "${selected[i]}" = 1 ]; then
+      echo "${available[i]}" >>"$LANGS_FILE"
     fi
   done
   echo "Valgte språk: $(tr '\n' ' ' <"$LANGS_FILE")"
