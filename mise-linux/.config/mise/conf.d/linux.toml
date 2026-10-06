@@ -15,7 +15,6 @@ watchexec = "latest"
 
 # Editors / TUI
 neovim = "latest"
-helix = "latest"
 lazygit = "latest"
 lazydocker = "latest"
 yazi = "latest"

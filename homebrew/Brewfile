@@ -3,7 +3,6 @@ tap "juxt/allium"
 tap "stripe/stripe-cli"
 
 # Shell / CLI
-brew "coreutils"
 brew "git"
 brew "grep"
 brew "gzip"
@@ -24,13 +23,11 @@ brew "direnv"
 brew "gh"
 brew "jq"
 brew "dict"
-brew "telnet"
 brew "watchexec"
 brew "mas"
 
 # Editors / TUI
 brew "neovim"
-brew "helix"
 brew "tmux"
 brew "lazygit"
 brew "lazydocker"
