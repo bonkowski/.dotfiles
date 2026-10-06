@@ -27,6 +27,8 @@ APT_PACKAGES=(
   zsh tmux stow git curl wget ca-certificates build-essential unzip xz-utils file
   # Enkle CLI-verktøy der apt-versjonen holder
   tree jq ripgrep fzf direnv dict telnet
+  # Brukes av git (pager og editor i .gitconfig), så de må ligge i PATH også utenfor zsh
+  git-delta vim
   # Valgfrie avhengigheter for yazi
   ffmpeg p7zip-full poppler-utils imagemagick
   # Build / dev tooling

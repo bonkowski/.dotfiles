@@ -1,5 +1,5 @@
 # Verktøy for Linux/WSL – tilsvarer Brewfile på Mac.
-# Grunnpakker og enkle CLI-verktøy (zsh, tmux, stow, git, jq, ripgrep, fzf, direnv osv.)
+# Grunnpakker og enkle CLI-verktøy (zsh, tmux, stow, git, delta, jq, ripgrep, fzf, direnv osv.)
 # installeres med apt i setup.sh. Her ligger det apt mangler eller har for gamle versjoner av.
 # Språk (dotnet, python, rust osv.) ligger i langs/ og lenkes inn i conf.d av setup.sh.
 [tools]
@@ -8,7 +8,6 @@
 fd = "latest"
 zoxide = "latest"
 bat = "latest"
-delta = "latest"
 starship = "latest"
 bottom = "latest"
 gh = "latest"
